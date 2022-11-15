@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Comment, Post, User } = require('../models');
-const withAuth = require('../utils/auth');
+
 
 router.get('/login', (req, res) => {
   // If the user is already logged in, redirect the request to another route
@@ -12,7 +12,7 @@ router.get('/login', (req, res) => {
   res.render('login');
 });
 
-router.get('/', withAuth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     // Get all projects and JOIN with user data
     const postData = await Post.findAll({
@@ -34,7 +34,7 @@ router.get('/', withAuth, async (req, res) => {
     const posts = postData.map((posts) => posts.get({ plain: true }));
 
     // Pass serialized data and session flag into template
-    res.render('posts', { 
+    res.render('dashboard', { 
       posts, 
       logged_in: req.session.logged_in 
     });
@@ -43,20 +43,35 @@ router.get('/', withAuth, async (req, res) => {
   }
 });
 
-router.get('/create',withAuth, async (req,res)=>{
-  try{
-    res.render('create',{
-      logged_in: req.session.logged_in
+router.get('posts/:id', async (req, res) => {
+  try {
+    // Get all projects and JOIN with user data
+    const postData = await Post.findByPk({
+      where:{
+        id: req.params.id
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['name'], 
+        }, 
+        {
+          model: Comment,
+          attributes: ['id', 'comment_text', 'post_id', 'user_id']
+        } 
+      ],order: [
+        ['date_created', 'ASC'],
+    ],
     });
-  }catch (err) {
-    res.status(500).json(err);
-  }
-});
 
-router.get('/signup', async (req,res)=>{
-  try{
-    res.render('signup');
-  }catch (err) {
+    const posts = postData.map((posts) => posts.get({ plain: true }));
+
+    // Pass serialized data and session flag into template
+    res.render('homepage', { 
+      posts, 
+      logged_in: req.session.logged_in 
+    });
+  } catch (err) {
     res.status(500).json(err);
   }
 });
@@ -80,11 +95,4 @@ router.get('/', (req, res) => {
   res.render('/')
 })
 
-router.get('/contact',withAuth, async (req,res)=>{
-  try{
-    res.render('contact');
-  }catch (err) {
-    res.status(500).json(err);
-  }
-});
   module.exports = router;

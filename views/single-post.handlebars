@@ -1,6 +1,8 @@
-{{> post-info}}
+{{> posts-info}}
 
 {{#if loggedin}}
+
+  <a href="/post/{{id}}"></a>
 
 <form>
     <textarea name="comment_content"></textarea>
@@ -8,7 +10,7 @@
 
 <button type="submit">Add Comment</button>
 
-{{> comments}}
+{{> post-comments}}
 
 {{else}}
 <a href="/login">You must login first to view this page</a>
