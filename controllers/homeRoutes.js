@@ -16,6 +16,7 @@ router.get('/', async (req, res) => {
   try {
     // Get all projects and JOIN with user data
     const postData = await Post.findAll({
+      attributes: ['id', 'title','post_content', 'date_created', 'user_id'],
       include: [
         {
           model: User,
@@ -30,10 +31,8 @@ router.get('/', async (req, res) => {
     ],
     });
 
-    // Serialize data so the template can read it
-    const posts = postData.map((posts) => posts.get({ plain: true }));
+    const posts = postData.map((post) => post.get({ plain: true }));
 
-    // Pass serialized data and session flag into template
     res.render('dashboard', { 
       posts, 
       logged_in: req.session.logged_in 
@@ -43,38 +42,45 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('posts/:id', async (req, res) => {
-  try {
-    // Get all projects and JOIN with user data
-    const postData = await Post.findByPk({
+router.get('/post/:id', (req, res) => {
+    Post.findOne({
       where:{
         id: req.params.id
       },
+      attributes: ['id', 'title', 'post_content', 'date_created', 'user_id'],
       include: [
         {
+          model: Comment,
+          attributes: ['id', 'comment_text', 'post_id', 'user_id'],
           model: User,
           attributes: ['name'], 
         }, 
         {
-          model: Comment,
-          attributes: ['id', 'comment_text', 'post_id', 'user_id']
+          model: User, 
+          attributes: ['name']
         } 
-      ],order: [
-        ['date_created', 'ASC'],
-    ],
-    });
+      ]
+    })
+      .then(postData => {
+        if (!postData) {
+          res.status(404).json({ message: 'No post with this id'});
+          return;
+        }
+        const post = postData.get({ plain: true })
 
-    const posts = postData.map((posts) => posts.get({ plain: true }));
+        res.render('single-post', {
+          post, 
+          logged_in: req.session.logged_in
+        })
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err)
+      })
+  })
 
-    // Pass serialized data and session flag into template
-    res.render('homepage', { 
-      posts, 
-      logged_in: req.session.logged_in 
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+
+
 
 router.post('/logout', (req, res) => {
   if (req.session.logged_in) {

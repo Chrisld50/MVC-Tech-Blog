@@ -6,6 +6,7 @@ const sequelize = require('../config/connection');
 router.get('/', withAuth, async (req, res) => {
     try {
       const postData = await Post.findAll({
+        user_id: req.session.user_id,
         include: [
           {
             model: User,
@@ -20,7 +21,7 @@ router.get('/', withAuth, async (req, res) => {
       ],
       });
 
-      const posts = postData.map((posts) => posts.get({ plain: true }));
+      const posts = postData.map((post) => post.get({ plain: true }));
 
     res.render('dashboard', { 
       posts, 
@@ -34,6 +35,7 @@ router.get('/', withAuth, async (req, res) => {
 router.get('/create/', withAuth, async (req, res) =>{
     try {
     const postData = await Post.findAll({
+      user_id: req.session.user_id,
         include: [
           {
             model: User,
@@ -47,7 +49,7 @@ router.get('/create/', withAuth, async (req, res) =>{
           ['date_created', 'ASC'],
       ],
       });
-      const posts = postData.map((posts) => posts.get({ plain: true }));
+      const posts = postData.map((post) => post.get({ plain: true }));
 
       res.render('create-post', { 
         posts, 
@@ -57,3 +59,5 @@ router.get('/create/', withAuth, async (req, res) =>{
       res.status(500).json(err);
     }
 });
+
+module.exports = router
