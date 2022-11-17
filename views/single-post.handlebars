@@ -1,7 +1,7 @@
 
 {{> posts-info}}
 
-{{#if loggedin}}
+{{#if logged_in}}
 
   <a href="/post/{{id}}"></a>
 
@@ -15,5 +15,5 @@
 
 {{else}}
 <a href="/login">You must login first to view this page</a>
-<script src="/public/js/comment.js"></script>
+<script src="./js/comment.js"></script>
 {{/if}}

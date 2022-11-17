@@ -32,7 +32,7 @@ router.get('/', withAuth, async (req, res) => {
   }
 });
 
-router.get('/create/', withAuth, async (req, res) =>{
+router.get('/create', withAuth, async (req, res) =>{
     try {
     const postData = await Post.findAll({
       user_id: req.session.user_id,

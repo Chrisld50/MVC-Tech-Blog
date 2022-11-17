@@ -1,12 +1,14 @@
 <div class="comments">
- {{#each this}}
-    <section>
+ {{#each comment}}
+    <section id="comment_info">
         <div>
             {{user.user_id}}
         </div>
         <div>
-            {{comment_text}}
+            {{this.comment}}
         </div>
     </section>
 </div>
 {{/each}}
+
+<script src ="/js/post-comments"></script>

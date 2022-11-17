@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Comment, Post, User } = require('../models');
+const  withAuth  = require('../utils/auth');
 
 
 router.get('/login', (req, res) => {
@@ -42,7 +43,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/post/:id', (req, res) => {
+router.get('/post/:id', withAuth, (req, res) => {
     Post.findOne({
       where:{
         id: req.params.id

@@ -1,13 +1,12 @@
 
 <section class="card">
 <a href="/post/{{id}}">
-    <header>{{title}}</header>
+    <header>{{post.title}}</header>
 
     <div class="card-body">
-        <p>{{post_content}}</p>
-        <p>{{user.name}}</p>
-        <p>{{user_id}}</p>
+        <p>{{post.post_content}}</p>
+        <p>{{post.user.name}}</p>
     </div>
   </a>
-<a href="./posts.handlebars/{{id}}">{{comments.length}} {{format_plural "comment" comments.length}}</a>
+<a href="./comment/{{id}}">{{comments.length}} {{format_plural "comment" comments.length}}</a>
 </section>

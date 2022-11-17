@@ -1,11 +1,11 @@
 async function commentFormHandler(event) {
     event.preventDefault();
 
-    let comment_content = document.querySelector('tesxtarea[name="comment-body"]').value;
+    const comment_text = document.querySelector('tesxtarea[name="comment-body"]').value;
 
-    let post_id = window.location.toString().split('/');
+    const post_id = window.location.toString().split('/')[window.location.toString().split('/').length -1]
     
-    if (comment_content) {
+
         let response = await fetch('/api/comments', {
             method: 'POST',
             body: JSON.stringify({
@@ -22,7 +22,7 @@ async function commentFormHandler(event) {
         } else {
             alert(response.statusText);
         }
-    }
+
 }
 
-document.querySelector('.comment-form').addEventListener('submit', commentFormHandler)
+document.querySelector('#comment_info').addEventListener('submit', commentFormHandler)
