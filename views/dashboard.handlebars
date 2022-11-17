@@ -7,7 +7,19 @@
 
 {{#each posts as |post|}}
 
-{{> posts-info}}
+
+<section class="card">
+<a href="/post/{{id}}">
+    <header>{{post.title}}</header>
+
+    <div class="card-body">
+        <p>{{post.post_content}}</p>
+        <p>{{post.user.name}}</p>
+    </div>
+  </a>
+<a href="./comment/{{id}}">{{comments.length}} {{format_plural "comment" comments.length}}</a>
+</section>
+
 
 {{/each}}
 

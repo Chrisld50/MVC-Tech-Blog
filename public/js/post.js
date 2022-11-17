@@ -1,17 +1,15 @@
 async function newFormHandler(event) {
     event.preventDefault();
-
-    const title = document.querySelector('input[name="post-title"]').value;
-    const post_content = document.querySelector('input[name="post-content"]').value;
+    console.log('booyahh')
+    const title = document.querySelector('input[id="post-title"]').value;
+    const post_content = document.querySelector('input[id="post-content"]').value;
 
     const response = await fetch('/api/post', {
         method: 'POST',
         body: JSON.stringify({
-            id,
-            user_id,
             title,
-            post_content,
-            date_created
+            post_content
+
 
         }),
         headers: {
@@ -26,4 +24,6 @@ async function newFormHandler(event) {
     }
 }
 
-document.querySelector('#send').addEventListener('submit', newFormHandler)
+
+const sendButton = document.querySelector('#send');
+if (sendButton) {sendButton.addEventListener('click', newFormHandler)};
